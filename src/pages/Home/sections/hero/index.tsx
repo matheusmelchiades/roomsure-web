@@ -9,8 +9,38 @@ import {
 } from "@heroicons/react/24/solid";
 
 import bedIcon from "../../../../assets/icons/bed.svg";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useRooms } from "../../../../hooks/rooms";
+
+interface Filters {
+  search: string;
+}
 
 export default function HeroSection() {
+  const [filters, setFilters] = useState<Filters>({} as Filters);
+  let [, setSearchParams] = useSearchParams();
+  const { fetchData, updateFilters } = useRooms();
+
+  const handleUpdateFilter = (field: string, value: any) => {
+    setFilters({
+      ...filters,
+      [field]: value,
+    });
+  };
+
+  useEffect(() => {
+    const { search = "" } = filters;
+
+    setSearchParams({
+      q: search,
+    });
+
+    updateFilters({
+      search,
+    });
+  }, [filters]);
+
   return (
     <section className="w-full h-screen flexh-screen flex flex-col bg-hero-pattern bg-cover bg-center px-32 relative">
       <HeaderComponent />
@@ -61,6 +91,7 @@ export default function HeroSection() {
                 type="text"
                 className="w-full text font-semibold"
                 placeholder="Search your place here..."
+                onChange={(e) => handleUpdateFilter("search", e?.target?.value)}
               />
             </div>
 
@@ -90,7 +121,10 @@ export default function HeroSection() {
               Guests
             </div>
 
-            <button className="bg-primary text-white p-2 px-8 rounded-lg cursor-pointer ml-4 text-base text-nowrap">
+            <button
+              className="bg-primary text-white p-2 px-8 rounded-lg cursor-pointer ml-4 text-base text-nowrap"
+              onClick={fetchData}
+            >
               Search
             </button>
           </div>
