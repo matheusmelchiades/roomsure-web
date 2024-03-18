@@ -2,7 +2,12 @@ import { memo } from "react";
 import { IRoom } from "../../../../@types/rooms";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 
-function RoomCard({ room }: { room: IRoom }) {
+interface IRoomCardComponentProps {
+  room: IRoom;
+  onClick?: (data: IRoom) => void;
+}
+
+function RoomCard({ room, onClick }: IRoomCardComponentProps) {
   return (
     <div className="bg-whitesmoke rounded-lg text-gray-500">
       <img
@@ -29,7 +34,10 @@ function RoomCard({ room }: { room: IRoom }) {
         <div className="flex flex-row justify-between self-end items-end mt-4">
           <p className="text-secondary text-lg">${room.price} / week</p>
 
-          <button className="bg-secondary text-white p-2 px-6 rounded-lg">
+          <button
+            className="bg-secondary text-white p-2 px-6 rounded-lg"
+            onClick={() => onClick?.(room)}
+          >
             Book now
           </button>
         </div>

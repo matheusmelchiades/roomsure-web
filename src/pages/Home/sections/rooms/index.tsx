@@ -1,11 +1,21 @@
-import { UserGroupIcon } from "@heroicons/react/24/solid";
 import { useRooms } from "../../../../hooks/rooms";
 import { useEffect } from "react";
 import LoaderComponent from "../../../../components/loader";
 import RoomCard from "./room-card";
+import { useNavigate } from "react-router-dom";
+import { IRoom } from "../../../../@types/rooms";
 
 export default function PopularPlacesSection() {
+  const navigate = useNavigate();
   const { rooms, loading, fetchData } = useRooms();
+
+  const selectRoom = (room: IRoom) => {
+    navigate("/checkout", {
+      state: {
+        order: room,
+      },
+    });
+  };
 
   useEffect(() => {
     (async () => {
@@ -32,7 +42,7 @@ export default function PopularPlacesSection() {
       ) : (
         <div className="grid grid-cols-3 gap-6 mt-6">
           {rooms?.map((room) => (
-            <RoomCard room={room} />
+            <RoomCard room={room} onClick={selectRoom} />
           ))}
         </div>
       )}
